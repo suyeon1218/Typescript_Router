@@ -4,13 +4,13 @@ import Item from '~/components/Item';
 class Page2 extends Component {
   template(): string {
     return `
-        <h2>Page 2</h2>
-        <div class='.outlet'></div>
+        <h2>Page2</h2>
+        <div class='item outlet'></div>
       `;
   }
 
-  mounted() {
-    this.children(Item, '.outlet');
+  updated() {
+    this.children(Item, '.item');
   }
 }
 

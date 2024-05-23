@@ -5,12 +5,12 @@ class Page1 extends Component {
   template(): string {
     return `
         <h2>Page 1</h2>
-        <div class='.outlet'></div>
+        <div class='item outlet'></div>
       `;
   }
 
-  mounted() {
-    this.children(Item, '.outlet');
+  updated() {
+    this.children(Item, '.item');
   }
 }
 
