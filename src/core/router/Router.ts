@@ -1,32 +1,27 @@
 import Component from '~/core/components/Component';
+import { findRoute } from './Util';
 
-export interface RouteType {
+export interface Route {
   path: string;
   element: typeof Component;
-  children?: RouteType[];
+  children?: Route[];
 }
 
+export interface Params {
+  [key: string]: any;
+}
+
+export type CurrRoute = Route & { params: Params | undefined };
+
 class Router {
-  private routes: RouteType[] | undefined;
-  private $target: Element | undefined;
-  route: { Element: typeof Component | undefined };
+  private routes: Route[] | undefined;
+  currRoutes: CurrRoute[];
 
   constructor() {
-    this.route = { Element: undefined };
+    this.currRoutes = [];
   }
 
-  render(selector?: string) {
-    const $target = selector ? document.querySelector(selector) : this.$target;
-
-    if ($target instanceof Element && this.route.Element) {
-      const { Element } = this.route;
-
-      this.$target = $target;
-      new Element({ $target });
-    }
-  }
-
-  createRouter(routes: RouteType[]) {
+  createRouter(routes: Route[]) {
     this.routes = routes;
     this.routing();
 
@@ -36,21 +31,11 @@ class Router {
   navigate(url: string) {
     history.pushState(null, '', url);
     this.routing();
-    this.render();
   }
 
   routing() {
-    const currentRoute = this.routes?.find((route) => {
-      if (route.path === '') {
-        return route;
-      }
-
-      const LocationPathName = '/' + location.pathname.split('/')[1];
-      return LocationPathName === route.path;
-    });
-
-    if (currentRoute && this.route) {
-      this.route.Element = currentRoute.element;
+    if (this.routes) {
+      this.currRoutes = findRoute(location.pathname, '', this.routes);
     }
   }
 }
