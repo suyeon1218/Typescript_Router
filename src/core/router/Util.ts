@@ -7,7 +7,7 @@ export function findRoute(URL: string, currPath: string, routes: Route[]) {
     for (const route of childrenRoutes) {
       const { path, children } = route;
       const nextPath = (currPath + path).replace('//', '/');
-      const { isMatched, params } = isMathcedPath(URL, currPath);
+      const { isMatched, params } = isMathcedPath(URL, nextPath);
 
       if (isMatched) {
         currRoute.push({ ...route, params });
