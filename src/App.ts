@@ -1,15 +1,20 @@
 import Component from './core/components/Component';
-import MainPage from './pages/MainPage';
+import { Outlet } from './core/router';
 
 class App extends Component {
   template(): string {
     return `
-        <div class='main'></div>
+        <div id='main' class='outlet'></div>
       `;
   }
 
-  mounted() {
-    this.children(MainPage, '.main');
+  updated() {
+    this.children(
+      Outlet(() => {
+        this.render();
+      }),
+      '#main'
+    );
   }
 }
 

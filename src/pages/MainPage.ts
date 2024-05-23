@@ -10,13 +10,13 @@ class MainPage extends Component {
           <button data-link='page2'>Page2</button>
           <button data-link='page3'>Page3</button>
         </ul>
-        <div class='outlet'></div>
+        <div id='page' class='outlet'></div>
       `;
   }
 
   addEvent(): void {
     this.$target.addEventListener('click', (event) => {
-      if (event.target instanceof HTMLDivElement) {
+      if (event.target instanceof HTMLButtonElement) {
         const { link } = event.target.dataset;
 
         link && navigate(link);
@@ -24,7 +24,14 @@ class MainPage extends Component {
     });
   }
 
-  mouted() {}
+  updated() {
+    this.children(
+      Outlet(() => {
+        this.render();
+      }),
+      '#page'
+    );
+  }
 }
 
 export default MainPage;
