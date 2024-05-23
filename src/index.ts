@@ -6,9 +6,6 @@ import Page1 from './pages/Page1';
 import Page2 from './pages/Page2';
 import Page3 from './pages/Page3';
 
-const $app = document.querySelector('.App');
-$app && new App({ $target: $app });
-
 createRouter([
   {
     path: '/',
@@ -47,3 +44,6 @@ createRouter([
     ],
   },
 ]);
+
+const $app = document.querySelector('.App');
+$app && new App({ $target: $app });
