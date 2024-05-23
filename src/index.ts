@@ -1,3 +1,4 @@
+import App from './App';
 import Item from './components/Item';
 import { createRouter } from './core/router';
 import MainPage from './pages/MainPage';
@@ -6,6 +7,7 @@ import Page2 from './pages/Page2';
 import Page3 from './pages/Page3';
 
 const $app = document.querySelector('.App');
+$app && new App({ $target: $app });
 
 createRouter([
   {
