@@ -4,13 +4,13 @@ import { Outlet, navigate } from '~/core/router';
 class Page3 extends Component {
   template(): string {
     return `
-        <h2>Page 3</h2>
+      <h2>Page 3</h2>
         <ul>
-        <li data-link="/page3/1">item1</li>
-        <li data-link="/page3/2">item2</li>
-        <li data-link="/page3/3">item3</li>
-      </ul
-        <div class='item'></div>
+          <li data-link="/page3/1">item1</li>
+          <li data-link="/page3/2">item2</li>
+          <li data-link="/page3/3">item3</li>
+      </ul>
+      <div class='item outlet'></div>
       `;
   }
 

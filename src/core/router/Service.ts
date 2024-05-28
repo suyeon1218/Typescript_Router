@@ -21,3 +21,9 @@ export function Outlet(observe: () => void) {
 
   return element as typeof Component;
 }
+
+export function getParams() {
+  const outletLength = Router.outlets.length;
+
+  return Router.currRoutes[outletLength].params;
+}

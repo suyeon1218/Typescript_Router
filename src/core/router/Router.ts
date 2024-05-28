@@ -41,23 +41,37 @@ class Router {
 
   routing() {
     if (this.routes === undefined) return;
+    console.log(this.observes);
 
     const nextRoutes = findRoute(location.pathname, '/', this.routes);
     const nextOutlets = [...nextRoutes];
-    let lastRender = undefined;
+    let lastObserve = undefined;
+    let lastRenderIndex = 0;
 
     if (this.observes.length > 0) {
-      for (let index = this.currRoutes.length - 1; index >= 0; index--) {
-        if (this.currRoutes[index].path !== nextRoutes[index].path) {
-          lastRender = this.observes[index];
+      while (nextOutlets.length > 0 && this.currRoutes.length > 0) {
+        if (
+          nextOutlets[nextOutlets.length - 1].path !==
+          this.currRoutes[this.currRoutes.length - 1].path
+        ) {
           break;
         }
+        lastRenderIndex += 1;
         nextOutlets.pop();
+        this.currRoutes.pop();
+      }
+
+      lastObserve = this.observes[lastRenderIndex];
+
+      while (this.observes.length > lastRenderIndex) {
+        this.observes.pop();
       }
     }
+
     this.currRoutes = [...nextRoutes];
-    this.outlets = [...nextRoutes];
-    lastRender && lastRender();
+    this.outlets = [...nextOutlets];
+
+    lastObserve && lastObserve();
   }
 }
 

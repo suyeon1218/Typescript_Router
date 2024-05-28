@@ -7,17 +7,21 @@ export function findRoute(URL: string, currPath: string, routes: Route[]) {
     for (const route of childrenRoutes) {
       const { path, children } = route;
       const nextPath = (currPath + path).replace('//', '/');
-      const { isMatched, params } = isMathcedPath(URL, nextPath);
+      const { isMatched, params, paramId } = isMathcedPath(URL, nextPath);
 
       if (isMatched) {
-        currRoute.push({ ...route, params });
+        paramId
+          ? currRoute.push({ ...route, path: `/${params[paramId]}`, params })
+          : currRoute.push({ ...route, params });
         return currRoute;
       }
       if (children) {
         const matchedRoute = find(nextPath, children);
 
         if (matchedRoute) {
-          currRoute.push({ ...route, params });
+          paramId
+            ? currRoute.push({ ...route, path: `/${params[paramId]}`, params })
+            : currRoute.push({ ...route, params });
           return route;
         }
       }
@@ -34,13 +38,13 @@ function isMathcedPath(URL: string, currPath: string) {
   const result: {
     params: Params;
     isMatched: boolean;
-  } = { params: {}, isMatched: false };
+    paramId: string | undefined;
+  } = { params: {}, isMatched: false, paramId: undefined };
 
   if (URL === currPath) {
     result.isMatched = true;
     return result;
   }
-
   const URLTokens = URL.split('/');
   const currPathTokens = currPath.split('/');
 
@@ -48,8 +52,9 @@ function isMathcedPath(URL: string, currPath: string) {
     currPathTokens.length === URLTokens.length &&
     currPathTokens.every((token, index) => {
       if (token.startsWith(':')) {
-        const [param, value] = [token.slice(1), URLTokens[index].slice(1)];
+        const [param, value] = [token.slice(1), URLTokens[index]];
         result.params[param] = value;
+        result.paramId = token.slice(1);
 
         return true;
       }
