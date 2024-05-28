@@ -33,32 +33,31 @@ class Router {
   }
 
   navigate(url: string) {
+    if (url === location.pathname) return;
+
     history.pushState(null, '', url);
     this.routing();
   }
 
   routing() {
-    if (this.routes) {
-      const nextRoutes = findRoute(location.pathname, '/', this.routes);
-      this.outlets = [...nextRoutes];
+    if (this.routes === undefined) return;
 
-      if (this.observes.length > 0) {
-        let lastRender = this.observes[this.observes.length - 1];
+    const nextRoutes = findRoute(location.pathname, '/', this.routes);
+    const nextOutlets = [...nextRoutes];
+    let lastRender = undefined;
 
-        for (let index = 0; index < this.currRoutes.length - 1; index++) {
-          if (this.currRoutes[index].path !== nextRoutes[index].path) {
-            lastRender = this.observes[index];
-            break;
-          } else {
-            this.outlets.pop();
-          }
+    if (this.observes.length > 0) {
+      for (let index = this.currRoutes.length - 1; index >= 0; index--) {
+        if (this.currRoutes[index].path !== nextRoutes[index].path) {
+          lastRender = this.observes[index];
+          break;
         }
-        lastRender && lastRender();
-      } else {
-        this.outlets = [...nextRoutes];
+        nextOutlets.pop();
       }
-      this.currRoutes = nextRoutes;
     }
+    this.currRoutes = [...nextRoutes];
+    this.outlets = [...nextRoutes];
+    lastRender && lastRender();
   }
 }
 
