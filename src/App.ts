@@ -4,7 +4,7 @@ import { Outlet } from './core/router';
 class App extends Component {
   template(): string {
     return `
-        <div id='main' class='outlet'></div>
+        <div class='outlet main'></div>
       `;
   }
 
@@ -13,7 +13,7 @@ class App extends Component {
       Outlet(() => {
         this.render();
       }),
-      '#main'
+      '.main'
     );
   }
 }
