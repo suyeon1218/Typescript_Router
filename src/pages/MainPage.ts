@@ -6,11 +6,11 @@ class MainPage extends Component {
     return `
         <h1>메인 페이지</h1>
         <ul>
-          <button data-link='page1'>Page1</button>
-          <button data-link='page2'>Page2</button>
-          <button data-link='page3'>Page3</button>
+          <button data-link='/page1'>Page1</button>
+          <button data-link='/page2'>Page2</button>
+          <button data-link='/page3'>Page3</button>
         </ul>
-        <div id='page' class='outlet'></div>
+        <div class='outlet page'></div>
       `;
   }
 
@@ -29,7 +29,7 @@ class MainPage extends Component {
       Outlet(() => {
         this.render();
       }),
-      '#page'
+      '.page'
     );
   }
 }
