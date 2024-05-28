@@ -17,5 +17,7 @@ export function navigate(url: string) {
 export function Outlet(observe: () => void) {
   const element = Router.outlets.pop()?.element;
 
+  Router.observes.push(observe);
+
   return element as typeof Component;
 }
