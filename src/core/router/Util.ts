@@ -48,7 +48,7 @@ function isMathcedPath(URL: string, currPath: string) {
     currPathTokens.length === URLTokens.length &&
     currPathTokens.every((token, index) => {
       if (token.startsWith(':')) {
-        const [param, value] = [URLTokens[index].slice(1), token.slice(1)];
+        const [param, value] = [token.slice(1), URLTokens[index].slice(1)];
         result.params[param] = value;
 
         return true;
