@@ -45,7 +45,7 @@ class Component<Props = any, State = any> {
     props?: Omit<ConstructorParameters<ChildComponent>[0], '$target'>
   ) {
     const $element = this.$target.querySelector(selector);
-    if ($element instanceof Element) {
+    if ($element instanceof Element && ChildComponent) {
       new ChildComponent({ $target: $element, ...props });
     }
   }
