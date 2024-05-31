@@ -6,16 +6,13 @@ class Item extends Component {
 
   constructor({ $target }: ComponentProps) {
     super({ $target });
-    this.params = undefined;
-  }
-
-  beforeMount(): void {
-    this.params = getParams();
+    this.params = this.params ? this.params : getParams();
+    this.render();
   }
 
   template(): string {
     return `
-        <div>item${this.params ? this.params.id : ''}</div>
+        <div>item${this.params?.id ? this.params.id : ''}</div>
       `;
   }
 }

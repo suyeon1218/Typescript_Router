@@ -4,17 +4,12 @@ import { Outlet } from './core/router';
 class App extends Component {
   template(): string {
     return `
-        <div class='outlet main'></div>
+        <div id='outlet' class='main'></div>
       `;
   }
 
   updated() {
-    this.children(
-      Outlet(() => {
-        this.render();
-      }),
-      '.main'
-    );
+    this.children(Outlet(), '.main');
   }
 }
 

@@ -1,5 +1,5 @@
 export interface ComponentProps<Props = any, State = any> {
-  $target: Element;
+  $target: Element | null;
   props?: Props;
   state?: State;
 }
@@ -40,11 +40,11 @@ class Component<Props = any, State = any> {
   }
 
   children(
-    ChildComponent: ChildComponent,
+    ChildComponent: ChildComponent | null,
     selector: string,
     props?: Omit<ConstructorParameters<ChildComponent>[0], '$target'>
   ) {
-    const $element = this.$target.querySelector(selector);
+    const $element = this.$target?.querySelector(selector);
     if ($element instanceof Element && ChildComponent) {
       new ChildComponent({ $target: $element, ...props });
     }

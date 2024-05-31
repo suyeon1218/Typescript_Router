@@ -14,16 +14,20 @@ export function navigate(url: string) {
   return Router.navigate(url);
 }
 
-export function Outlet(observe: () => void) {
-  const element = Router.outlets.pop()?.element;
+export function Outlet() {
+  const outletIndex = document.querySelectorAll('#outlet').length - 1;
 
-  Router.observes.push(observe);
+  if (outletIndex < Router.currRoutes.length) {
+    const { element } = Router.currRoutes[outletIndex];
 
-  return element as typeof Component;
+    return element;
+  }
+
+  return null;
 }
 
 export function getParams() {
-  const outletLength = Router.outlets.length;
+  const outletIndex = document.querySelectorAll('#outlet').length;
 
-  return Router.currRoutes[outletLength].params;
+  return Router.currRoutes[outletIndex - 1].params;
 }

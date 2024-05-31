@@ -1,4 +1,19 @@
 import { Route, CurrRoute, Params } from './Router';
+import { navigate } from './Service';
+
+function getPathString(path: string) {
+  const pathToken = path.split('/');
+  const purePath: string[] = [];
+
+  for (const token of pathToken) {
+    if (token.startsWith(':')) {
+      break;
+    }
+    purePath.push(token);
+  }
+
+  return purePath.join('/');
+}
 
 export function findRoute(URL: string, currPath: string, routes: Route[]) {
   const currRoute: CurrRoute[] = [];
@@ -8,11 +23,16 @@ export function findRoute(URL: string, currPath: string, routes: Route[]) {
       const { path, children } = route;
       const nextPath = (currPath + path).replace('//', '/');
       const { isMatched, params, paramId } = isMathcedPath(URL, nextPath);
+      const purePath = getPathString(path);
 
       if (isMatched) {
         paramId
-          ? currRoute.push({ ...route, path: `/${params[paramId]}`, params })
-          : currRoute.push({ ...route, params });
+          ? currRoute.push({
+              ...route,
+              path: `${purePath}/${params[paramId]}`,
+              params,
+            })
+          : currRoute.push({ ...route, path: purePath, params });
         return currRoute;
       }
       if (children) {
@@ -20,8 +40,12 @@ export function findRoute(URL: string, currPath: string, routes: Route[]) {
 
         if (matchedRoute) {
           paramId
-            ? currRoute.push({ ...route, path: `/${params[paramId]}`, params })
-            : currRoute.push({ ...route, params });
+            ? currRoute.push({
+                ...route,
+                path: `${purePath}/${params[paramId]}`,
+                params,
+              })
+            : currRoute.push({ ...route, path: `${purePath}`, params });
           return route;
         }
       }
@@ -30,6 +54,10 @@ export function findRoute(URL: string, currPath: string, routes: Route[]) {
   }
 
   find(currPath, routes);
+
+  if (currRoute.length === 0) {
+    navigate('/404');
+  }
 
   return currRoute;
 }
@@ -41,12 +69,13 @@ function isMathcedPath(URL: string, currPath: string) {
     paramId: string | undefined;
   } = { params: {}, isMatched: false, paramId: undefined };
 
+  const URLTokens = URL.split('/');
+  const currPathTokens = currPath.split('/');
+
   if (URL === currPath) {
     result.isMatched = true;
     return result;
   }
-  const URLTokens = URL.split('/');
-  const currPathTokens = currPath.split('/');
 
   result.isMatched =
     currPathTokens.length === URLTokens.length &&
@@ -66,4 +95,30 @@ function isMathcedPath(URL: string, currPath: string) {
     });
 
   return result;
+}
+
+export function findRenderNode(
+  nextRoutes: CurrRoute[],
+  currRoutes: CurrRoute[]
+) {
+  const outlets = document.querySelectorAll('#outlet');
+  let depth = 0;
+  let nextPointer = nextRoutes.length - 1;
+  let currPointer = currRoutes.length - 1;
+
+  while (
+    outlets.length > depth &&
+    currRoutes &&
+    nextRoutes[nextPointer] &&
+    currRoutes[currPointer]
+  ) {
+    if (nextRoutes[nextPointer].path !== currRoutes[currPointer].path) {
+      break;
+    }
+    nextPointer -= 1;
+    currPointer -= 1;
+    depth += 1;
+  }
+
+  return [outlets[depth], nextRoutes[nextPointer].element] as const;
 }

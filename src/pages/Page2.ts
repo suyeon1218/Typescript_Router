@@ -10,7 +10,7 @@ class Page2 extends Component {
         <li data-link="/page2/2">item2</li>
         <li data-link="/page2/3">item3</li>
       </ul>
-      <div class='outlet'></div>
+      <div id='outlet'></div>
     `;
   }
 
@@ -25,12 +25,7 @@ class Page2 extends Component {
   }
 
   updated() {
-    this.children(
-      Outlet(() => {
-        this.render();
-      }),
-      '.outlet'
-    );
+    this.children(Outlet(), '#outlet');
   }
 }
 
